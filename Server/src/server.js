@@ -1,14 +1,17 @@
 import http from 'http';
 import app from './app.js';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+dotenv.config();  
 
-const PORT=process.env.PORT;
+const PORT=process.env.PORT||5000;
 
 const server=http.createServer(app);
 
 const connectDatabase = async () => {
     try {
         console.log("Connecting to database...");
-        await mongoose.connect(process.env.MONGO_URI);
+        await mongoose.connect(process.env.MONGODB_URI);
     } catch (error) {
         console.error("Database connection failure:", error);
         process.exit(1);

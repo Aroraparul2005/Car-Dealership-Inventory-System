@@ -1,16 +1,16 @@
 import express from 'express';
-import errorHandler from './middleware/errorHandler.js';
+import errorHandler from './middlewares/errorHandeller.js';
 import ApiError from './utils/apiHandeller.js';
-import userRoute from './routes/userRoute.js';
-import vehicleRouteRoute from './routes/vehiclesRoute.js';
+import userRouter from './routes/authRoute.js';
+import vehicleRouter from './routes/vehiclesRoute.js';
 import dotenv from 'dotenv';
 
 const app = express();
 app.use(express.json());
 
 // routes
-app.use('api/auth',userRoute);
-app.use('api/vehicle',vehicleRoute);
+app.use('api/auth',userRouter);
+app.use('api/vehicle',vehicleRouter);
 
 app.use((req, res, next) => {
   next(new ApiError(404, `Route ${req.originalUrl} not found`));

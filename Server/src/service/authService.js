@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import User from '../models/User';
-import ApiError from '../utils/apiHandeller';
+import User from '../models/User.js';
+import ApiError from '../utils/apiHandeller.js';
 
 
 export const registerUser = async ({ name, email, password, role }) => {

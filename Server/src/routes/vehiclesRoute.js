@@ -1,6 +1,6 @@
 import express from 'express';
-import authMiddleware from '../middlewares/authMiddleware';
-import adminMiddleware from '../middlewares/adminMiddleware';
+import authMiddleware from '../middlewares/authMiddleware.js';
+import adminMiddleware from '../middlewares/adminMiddleware.js';
 import {
   createVehicle,
   getVehicles,
@@ -9,7 +9,9 @@ import {
   deleteVehicle,
   purchaseVehicle,
   restockVehicle
-} from '../controller/vehicleController.js'; 
+} from '../controllers/vehiclesController.js'; 
+import asyncHandler from '../utils/asyncHandeller.js';
+import upload from '../middlewares/uploadMiddleware.js';
 
 
 const vehicleRouter=express.Router();
@@ -17,7 +19,7 @@ const vehicleRouter=express.Router();
 
 
 vehicleRouter.get('/search', searchVehicles);
-router.post('/', authMiddleware, upload.single('image'), createVehicle);
+vehicleRouter.post('/', authMiddleware, upload.single('image'), createVehicle);
 vehicleRouter.get('/', getVehicles);
 vehicleRouter.put('/:id', authMiddleware, updateVehicle);
 vehicleRouter.delete('/:id', authMiddleware, adminMiddleware, deleteVehicle);

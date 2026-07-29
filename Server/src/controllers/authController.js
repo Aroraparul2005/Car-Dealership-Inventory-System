@@ -1,4 +1,4 @@
-import asyncHandeler from '../utils/asyncHandeller.js';
+import asyncHandler from '../utils/asyncHandeller.js';
 import ApiError from '../utils/apiHandeller.js';
 import { registerUser, loginUser } from '../service/authService.js';
 

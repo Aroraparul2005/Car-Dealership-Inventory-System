@@ -1,5 +1,5 @@
-import asyncHandler from '../utils/asyncHandler.js';
-import ApiError from '../utils/ApiError.js';
+import ApiError from '../utils/apiHandeller.js';
+import asyncHandler from '../utils/asyncHandeller.js';
 import {
   createVehicleService,
   getVehiclesService,
@@ -8,7 +8,7 @@ import {
   deleteVehicleService,
   purchaseVehicleService,
   restockVehicleService,
-} from '../service/vehicleService.js';
+} from '../service/vehicleServics.js';
 
 // @route POST /api/vehicles
 export const createVehicle = asyncHandler(async (req, res) => {

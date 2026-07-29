@@ -1,4 +1,4 @@
-import ApiError from "../utils/apiHandeller";
+import ApiError from "../utils/apiHandeller.js";
 
 const adminMiddleware=(req,res,next)=>{
     if(!req.user){

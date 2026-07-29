@@ -1,5 +1,6 @@
-import Vehicle from '../model/Vehicle.js';
-import ApiError from '../utils/ApiError.js';
+import Vehicle from '../models/Vehicle.js';
+import ApiError from '../utils/apiHandeller.js';
+import fs from 'fs';
 
 export const createVehicleService=async(data) => {
   const vehicle=await Vehicle.create(data);
@@ -27,22 +28,6 @@ export const getVehiclesService=async({ page = 1 }) => {
       totalPages: Math.ceil(total / LIMIT),
     },
   };
-};
-
-export const searchVehiclesService=async({ make, model, category, minPrice, maxPrice }) => {
-  const filter = {};
-
-  if (make) filter.make = { $regex: make, $options: 'i' };
-  if (model) filter.model = { $regex: model, $options: 'i' };
-  if (category) filter.category = category.toLowerCase();
-
-  if (minPrice || maxPrice) {
-    filter.price = {};
-    if (minPrice) filter.price.$gte = Number(minPrice);
-    if (maxPrice) filter.price.$lte = Number(maxPrice);
-  }
-
-  return Vehicle.find(filter);
 };
 
 export const searchVehiclesService=async({
@@ -126,6 +111,30 @@ export const restockVehicleService=async(id, quantity = 1) => {
 
   vehicle.quantity += quantity;
   await vehicle.save();
+
+  return vehicle;
+};
+
+export const updateVehicleService = async (id, updates, newImagePath) => {
+  const vehicle = await Vehicle.findById(id);
+
+  if (!vehicle) {
+    throw new ApiError(404, 'Vehicle not found');
+  }
+
+  if (newImagePath) {
+    const oldImagePath = vehicle.image;
+    updates.image = newImagePath;
+
+    if (oldImagePath) {
+      fs.unlink(oldImagePath, (err) => {
+        if (err) console.error('Failed to delete old image:', err.message);
+      });
+    }
+  }
+
+  Object.assign(vehicle, updates);
+  await vehicle.save(); // .save() instead of findByIdAndUpdate so runValidators + old-image cleanup both work cleanly
 
   return vehicle;
 };
