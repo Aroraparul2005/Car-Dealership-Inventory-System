@@ -79,22 +79,23 @@ export const deleteVehicleService=async(id) => {
   return vehicle;
 };
 
-export const purchaseVehicleService=async(id, quantity = 1) => {
-  if (quantity<=0) {
+export const purchaseVehicleService = async (id, quantity = 1) => {
+  if (quantity <= 0) {
     throw new ApiError(400, 'quantity must be a positive number');
   }
 
-  const vehicle=await Vehicle.findById(id);
-  if(!vehicle){
-    throw new ApiError(404,'Vehicle not found');
-  }
+  const vehicle = await Vehicle.findOneAndUpdate(
+    { _id: id, quantity: { $gte: quantity } },
+    { $inc: { quantity: -quantity } },
+    { new: true }
+  );
 
-  if (vehicle.quantity<quantity) {
-    throw new ApiError(400,'Not available');
+  if (!vehicle) {
+    const exists = await Vehicle.exists({ _id: id });
+    throw exists
+      ? new ApiError(400, 'Not available')
+      : new ApiError(404, 'Vehicle not found');
   }
-
-  vehicle.quantity-=quantity;
-  await vehicle.save();
 
   return vehicle;
 };

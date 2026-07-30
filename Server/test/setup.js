@@ -1,15 +1,15 @@
 import mongoose from 'mongoose';
-import dotenv from 'dotenv';
-import { beforeAll, afterAll, afterEach } from '@jest/globals';
+import { MongoMemoryServer } from 'mongodb-memory-server';
 
-dotenv.config({ path: '.env.test' });
+let mongoServer;
 
 beforeAll(async () => {
-  await mongoose.connect(process.env.MONGODB_URI_TEST);
+  mongoServer = await MongoMemoryServer.create();
+  const uri = mongoServer.getUri();
+  await mongoose.connect(uri);
 });
 
 afterEach(async () => {
-  // Clean all collections after each test
   const collections = mongoose.connection.collections;
   for (const key in collections) {
     await collections[key].deleteMany({});
@@ -19,4 +19,5 @@ afterEach(async () => {
 afterAll(async () => {
   await mongoose.connection.dropDatabase();
   await mongoose.connection.close();
+  await mongoServer.stop();
 });

@@ -2,9 +2,9 @@ import jwt from 'jsonwebtoken';
 import ApiError from '../utils/apiHandeller.js';
 
 const authMiddleware=(req,res,next)=>{
-    const auth=req.header.authorization;
+    const auth=req.headers.authorization;
 
-    if(!auth||!auth.startWith('Bearer')){
+    if(!auth||!auth.startsWith('Bearer')){//startWith->startsWith
         return next(new ApiError(401,'No token provided'));
     }
 

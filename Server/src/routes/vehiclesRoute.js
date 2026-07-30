@@ -21,7 +21,7 @@ const vehicleRouter=express.Router();
 vehicleRouter.get('/search', searchVehicles);
 vehicleRouter.post('/', authMiddleware, upload.single('image'), createVehicle);
 vehicleRouter.get('/', getVehicles);
-vehicleRouter.put('/:id', authMiddleware, updateVehicle);
+vehicleRouter.put('/:id', authMiddleware, upload.single('image'), updateVehicle);
 vehicleRouter.delete('/:id', authMiddleware, adminMiddleware, deleteVehicle);
 vehicleRouter.post('/:id/purchase', authMiddleware, purchaseVehicle);
 vehicleRouter.post('/:id/restock', authMiddleware, adminMiddleware, restockVehicle);

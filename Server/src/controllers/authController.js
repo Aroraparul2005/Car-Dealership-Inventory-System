@@ -9,7 +9,7 @@ export const register = asyncHandler(async (req, res) => {
     throw new ApiError(400, 'name, email, and password are required');
   }
 
-  const response=await registerUser({name,email,password,role });
+  const result=await registerUser({name,email,password,role });
   res.status(201).json(result);
 });
 
@@ -21,6 +21,6 @@ export const login =asyncHandler(async (req, res)=>{
     throw new ApiError(400,'email and password are required');
   }
 
-  const response = await loginUser({ email, password });
+  const result=await loginUser({ email, password });
   res.status(200).json(result);
 });

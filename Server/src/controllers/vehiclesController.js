@@ -44,7 +44,7 @@ export const createVehicle = asyncHandler(async (req, res) => {
 
 // @route GET /api/vehicles
 export const getVehicles=asyncHandler(async(req,res) => {
-  const vehicles=await getVehiclesService();
+  const vehicles=await getVehiclesService(req.query);
   res.status(200).json(vehicles);
 });
 
@@ -55,8 +55,9 @@ export const searchVehicles=asyncHandler(async (req, res) => {
 });
 
 // @route PUT /api/vehicles/:id
-export const updateVehicle=asyncHandler(async (req, res) => {
-  const vehicle=await updateVehicleService(req.params.id, req.body);
+export const updateVehicle = asyncHandler(async (req, res) => {
+  const newImagePath = req.file ? req.file.path : undefined;
+  const vehicle = await updateVehicleService(req.params.id, req.body, newImagePath);
   res.status(200).json(vehicle);
 });
 

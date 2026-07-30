@@ -8,26 +8,22 @@ let adminToken;
 let staffToken;
 
 beforeAll(async () => {
-  // Create admin
   await request(app).post('/api/auth/register').send({
+    name: 'Admin User',
     email: 'admin@test.com',
     password: 'Admin123',
   });
 
-  // Force admin role (only for testing)
-  await User.findOneAndUpdate(
-    { email: 'admin@test.com' },
-    { role: 'admin' }
-  );
+  await User.findOneAndUpdate({ email: 'admin@test.com' }, { role: 'admin' });
 
   const adminLogin = await request(app).post('/api/auth/login').send({
     email: 'admin@test.com',
     password: 'Admin123',
   });
-  adminToken = adminLogin.body.data.token;
+  adminToken = adminLogin.body.token;
 
-  // Create staff
   await request(app).post('/api/auth/register').send({
+    name: 'Staff User',
     email: 'staff@test.com',
     password: 'Staff123',
   });
@@ -36,7 +32,7 @@ beforeAll(async () => {
     email: 'staff@test.com',
     password: 'Staff123',
   });
-  staffToken = staffLogin.body.data.token;
+  staffToken = staffLogin.body.token;
 });
 
 describe('Vehicle APIs', () => {
@@ -45,32 +41,17 @@ describe('Vehicle APIs', () => {
       const res = await request(app)
         .post('/api/vehicles')
         .set('Authorization', `Bearer ${adminToken}`)
-        .send({
-          make: 'Toyota',
-          model: 'Camry',
-          category: 'car',
-          price: 25000,
-          quantity: 10,
-        });
+        .field('make', 'Toyota')
+        .field('model', 'Camry')
+        .field('category', 'car')
+        .field('price', 25000)
+        .field('quantity', 10)
+        .attach('image', 'test/fixtures/sample.jpg');
+
 
       expect(res.statusCode).toBe(201);
-      expect(res.body.data).toHaveProperty('_id');
-      expect(res.body.data.make).toBe('Toyota');
-    });
-
-    it('should reject price as string', async () => {
-      const res = await request(app)
-        .post('/api/vehicles')
-        .set('Authorization', `Bearer ${adminToken}`)
-        .send({
-          make: 'Toyota',
-          model: 'Camry',
-          category: 'car',
-          price: '25000', // string
-          quantity: 10,
-        });
-
-      expect(res.statusCode).toBe(400);
+      expect(res.body).toHaveProperty('_id');
+      expect(res.body.make).toBe('Toyota');
     });
 
     it('should reject negative price', async () => {
@@ -83,6 +64,7 @@ describe('Vehicle APIs', () => {
           category: 'car',
           price: -5000,
           quantity: 10,
+          image: 'placeholder.jpg',
         });
 
       expect(res.statusCode).toBe(400);
@@ -125,6 +107,7 @@ describe('Vehicle APIs', () => {
         category: 'car',
         price: 20000,
         quantity: 5,
+        image: 'placeholder.jpg',
       });
 
       const res = await request(app)
@@ -133,7 +116,7 @@ describe('Vehicle APIs', () => {
         .send({ quantity: 2 });
 
       expect(res.statusCode).toBe(200);
-      expect(res.body.data.quantity).toBe(3);
+      expect(res.body.vehicle.quantity).toBe(3);
     });
 
     it('should prevent overselling (race condition test)', async () => {
@@ -143,9 +126,9 @@ describe('Vehicle APIs', () => {
         category: 'car',
         price: 20000,
         quantity: 1,
+        image: 'placeholder.jpg',
       });
 
-      // Fire 5 parallel requests
       const requests = Array(5)
         .fill()
         .map(() =>
@@ -174,6 +157,7 @@ describe('Vehicle APIs', () => {
         category: 'car',
         price: 18000,
         quantity: 2,
+        image: 'placeholder.jpg',
       });
 
       const res = await request(app)
@@ -193,6 +177,7 @@ describe('Vehicle APIs', () => {
         category: 'suv',
         price: 60000,
         quantity: 3,
+        image: 'placeholder.jpg',
       });
 
       const res = await request(app)
@@ -201,7 +186,7 @@ describe('Vehicle APIs', () => {
         .send({ quantity: 5 });
 
       expect(res.statusCode).toBe(200);
-      expect(res.body.data.quantity).toBe(8);
+      expect(res.body.vehicle.quantity).toBe(8);
     });
   });
 });

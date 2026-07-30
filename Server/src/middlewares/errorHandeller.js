@@ -5,9 +5,11 @@ const errorHandler = (err, req, res, next) => {
 
   // Mongoose validation error
   if (err.name === 'ValidationError') {
-    const messages = Object.values(err.errors).map((val) => val.message);
-    error = new ApiError(400, 'Validation failed', messages);
-  }
+  const messages = Object.values(err.errors).map((val) => val.message);
+  error = new ApiError(400, 'Validation failed', messages);
+} else if (err.name === 'CastError') {          // NEW
+  error = new ApiError(400, `Invalid ${err.path}: ${err.value}`);
+}
 
   // If still not an ApiError
   if (!(error instanceof ApiError)) {
