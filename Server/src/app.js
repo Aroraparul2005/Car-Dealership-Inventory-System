@@ -8,9 +8,19 @@ import vehicleRouter from './routes/vehiclesRoute.js';
 
 const app = express();
 
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://car-dealership-inventory-system-two-theta.vercel.app',
+];
+
 app.use(cors({
-  origin: 'http://localhost:5173',           
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
