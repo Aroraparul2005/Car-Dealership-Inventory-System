@@ -1,5 +1,9 @@
 "# Car-Dealership-Inventory-System" 
 ````markdown
+# Live  URL
+https://car-dealership-inventory-system-two-theta.vercel.app/
+
+
 # Vehicle Inventory Management System – Backend API
 
 A RESTful backend API for a **Vehicle Inventory Management System** built with **Node.js, Express, TypeScript, MongoDB, and Mongoose**. The API provides secure user authentication using JWT, role-based authorization, vehicle inventory management, Cloudinary image uploads, search and filtering, pagination, and inventory operations.
@@ -586,6 +590,12 @@ I used **Lovable** during my frontend development I provided all the endpoints w
 AI accelerated my development process by helping me understand implementation approaches, reducing time spent on boilerplate code, and providing guidance for backend architecture. I reviewed, modified, tested, and integrated all AI-assisted code to ensure it met the project requirements and functioned correctly.
 
 ---
+
+# Deployment
+
+Deployed Frontend on Vercel URL- https://car-dealership-inventory-system-two-theta.vercel.app/
+Deployed Backend on Render URL- https://car-dealership-inventory-system-hhn5.onrender.com
+Given access of API only to vercel URL and Localhost 5173 (for local development).
 
 # Author
 
