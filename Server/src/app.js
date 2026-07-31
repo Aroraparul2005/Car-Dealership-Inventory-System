@@ -7,6 +7,14 @@ import userRouter from './routes/authRoute.js';
 import vehicleRouter from './routes/vehiclesRoute.js';
 
 const app = express();
+
+app.use(cors({
+  origin: 'http://localhost:5173',           
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
+
+
 app.use(express.json());
 
 // routes
